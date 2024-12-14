@@ -44,7 +44,7 @@ def logg(msg) :
 
 def get_current_block_height() :
     # returns the current network height
-    r = requests.get('https://blockchain.info/latestblock')
+    r = requests.get('https://blockchain.info/latestblock', timeout=60)
     return int(r.json()['height'])
 
 
