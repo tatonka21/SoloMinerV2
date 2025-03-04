@@ -2,7 +2,6 @@ import binascii
 import hashlib
 import json
 import logging
-import random
 import socket
 import threading
 import time
@@ -14,6 +13,7 @@ import requests
 from colorama import Back , Fore , Style
 
 import context as ctx
+import secrets
 
 
 sock = None
@@ -106,7 +106,7 @@ def bitcoin_miner(t , restarted = False) :
         time.sleep(5)
 
     target = (ctx.nbits[2 :] + '00' * (int(ctx.nbits[:2] , 16) - 3)).zfill(64)
-    extranonce2 = hex(random.randint(0 , 2 ** 32 - 1))[2 :].zfill(2 * ctx.extranonce2_size)  # create random
+    extranonce2 = hex(secrets.SystemRandom().randint(0 , 2 ** 32 - 1))[2 :].zfill(2 * ctx.extranonce2_size)  # create random
 
     coinbase = ctx.coinb1 + ctx.extranonce1 + extranonce2 + ctx.coinb2
     coinbase_hash_bin = hashlib.sha256(hashlib.sha256(binascii.unhexlify(coinbase)).digest()).digest()
@@ -151,7 +151,7 @@ def bitcoin_miner(t , restarted = False) :
                   Style.RESET_ALL)
             continue
 
-        nonce = hex(random.randint(0 , 2 ** 32 - 1))[2 :].zfill(8)  # nNonce   #hex(int(nonce,16)+1)[2:]
+        nonce = hex(secrets.SystemRandom().randint(0 , 2 ** 32 - 1))[2 :].zfill(8)  # nNonce   #hex(int(nonce,16)+1)[2:]
         blockheader = ctx.version + ctx.prevhash + merkle_root + ctx.ntime + ctx.nbits + nonce + \
                       '000000800000000000000000000000000000000000000000000000000000000000000000000000000000000080020000'
         hash = hashlib.sha256(hashlib.sha256(binascii.unhexlify(blockheader)).digest()).digest()
